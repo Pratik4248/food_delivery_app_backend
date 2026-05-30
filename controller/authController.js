@@ -140,21 +140,12 @@ exports.verifyOtp = async (req, res) => {
     await Otp.deleteMany({ email });
 
 
-    // CHECK USER EXISTS
-    const existingUser =
-    await User.findOne({ email });
-
-    if (existingUser) {
-      return res.status(400).json({
-        message: 'User already exists'
-      });
-    }
-
-
+    
+    
     // HASH PASSWORD
     const hashedPassword = await bcrypt.hash(password, 10);
-
-
+    
+    
     // CREATE USER
     const user = await User.create({
       name,
@@ -163,8 +154,8 @@ exports.verifyOtp = async (req, res) => {
       phone,
       address
     });
-
-
+    
+    
     res.status(201).json({
       message: 'Email Verified & Signup Successful',
       user
@@ -177,3 +168,25 @@ exports.verifyOtp = async (req, res) => {
     });
   }
 };
+
+exports.checkUser = async(req,res)=>{
+
+  try{ 
+    const {email} = req.body;
+  
+// CHECK USER EXISTS
+const existingUser =
+await User.findOne({ email });
+
+if (existingUser) {
+  return res.status(400).json({
+    message: 'User already exists'
+  });
+}
+  }
+  catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+}
